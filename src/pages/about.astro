@@ -1,43 +1,50 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { FAMILY } from '@chirag127/oriz-ui'
+import { FAMILY } from '~/lib/family'
 import { SITE_CONFIG } from '~/lib/siteConfig'
 ---
 
 <BaseLayout
-  title={`About — ${SITE_CONFIG.name}`}
-  description={`About ${SITE_CONFIG.name}: free, private, browser-based PDF tools. Part of the ${FAMILY.brand} family by ${FAMILY.operator.name}.`}
-  hideSidebar={true}
+  title={`about — ${SITE_CONFIG.name}`}
+  description={`About ${SITE_CONFIG.name}: free, on-device PDF tools — part of the ${FAMILY.brand} family by ${FAMILY.operator.name}.`}
+  pageNum="ii"
 >
-  <header class="page-head">
-    <p class="eyebrow"><a href="/">PDF Tools</a> / About</p>
-    <h1>About PDF Tools</h1>
-  </header>
+  <div class="page-head">
+    <p class="eyebrow"><a href="/">tools</a> / about</p>
+    <h1>About this desk.</h1>
+    <p class="lede">
+      A typesetter's bench for documents — twenty-three implements that never
+      see your file. Built and maintained in Bhubaneswar.
+    </p>
+  </div>
+
+  <hr data-section="i" />
 
   <article class="prose">
-    <p class="lede">
-      <strong>{SITE_CONFIG.name}</strong> is a free, browser-based PDF toolkit —
-      30+ tools to merge, split, compress, convert, edit, sign, and OCR PDFs.
-      Files never leave your device.
+    <p>
+      <strong>oriz / pdf-tools</strong> is a free, browser-based set of PDF
+      implements. Twenty-three tools to bind, split, compress, convert,
+      redact, sign, and OCR — all running on your device.
     </p>
 
-    <h2>How it works</h2>
+    <h2>What stays on-device</h2>
     <p>
-      Every tool runs entirely in your browser using <code>pdf-lib</code>,
-      <code>pdfjs-dist</code>, <code>tesseract.js</code>, and friends. There is
-      no upload, no server-side processing, no account required to use a tool.
-      The only Firebase Auth integration is optional and only stores cross-site
-      preferences — it never sees your PDFs.
+      Every implement here runs entirely in your browser using
+      <code>pdf-lib</code>, <code>pdfjs-dist</code>,
+      <code>tesseract.js</code>, and a small set of friends. There is no
+      upload, no server-side processing, and no copy of your file kept on the
+      site. Sign-in is optional and only stores cross-site preferences — it
+      never sees your PDFs.
     </p>
 
-    <h2>Part of the oriz family</h2>
+    <h2>The family</h2>
     <p>
-      {SITE_CONFIG.name} is one of ten sites under the
-      <a href={FAMILY.rootOrigin}>{FAMILY.brand}</a> umbrella — a family of
-      free, fast, quiet static sites built and maintained by
+      pdf-tools is one of eleven sites under the
+      <a href={FAMILY.rootOrigin}>{FAMILY.brand}</a> umbrella — a small set
+      of free, fast, quiet sites built by
       <a href={`${FAMILY.rootOrigin}/about/`}>{FAMILY.operator.name}</a>.
-      They share a sign-in, a design system, and a single principle:
-      useful, free, no surveillance.
+      They share a sign-in, a design system, and a single principle: useful,
+      free, no surveillance.
     </p>
 
     <h2>Open source</h2>
@@ -55,28 +62,3 @@ import { SITE_CONFIG } from '~/lib/siteConfig'
     </p>
   </article>
 </BaseLayout>
-
-<style>
-  .page-head {
-    max-width: var(--container-prose, 720px);
-    margin-inline: auto;
-    padding-block: 3rem 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0 0 0.5rem; }
-  .eyebrow a { color: var(--color-fg-muted); text-decoration: none; }
-  h1 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
-  .prose {
-    max-width: var(--container-prose, 720px);
-    margin-inline: auto;
-    padding-block: 2.5rem 4rem;
-    color: var(--color-prose);
-    line-height: 1.75;
-    font-size: 1.0625rem;
-  }
-  .prose .lede { font-size: 1.1875rem; color: var(--color-fg); margin: 0 0 2rem; }
-  .prose h2 { font-family: var(--font-serif, Georgia, serif); font-size: 1.5rem; font-weight: 600; color: var(--color-fg); margin: 2.5rem 0 1rem; }
-  .prose p { margin: 0 0 1.25rem; }
-  .prose a { color: var(--color-accent); }
-  .prose code { background: var(--color-bg-muted); padding: 0.125em 0.375em; border-radius: 0.25rem; font-size: 0.875em; }
-</style>

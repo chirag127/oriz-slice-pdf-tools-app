@@ -2,25 +2,67 @@
 import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
 
-<BaseLayout title="404 — Page not found" description="The page you're looking for doesn't exist on PDF Tools." noindex={true} hideSidebar={true}>
-  <section class="notfound">
-    <p class="emoji" aria-hidden="true">📄</p>
-    <h1>404 — Page not found</h1>
-    <p>The page you're looking for doesn't exist. Try one of these:</p>
-    <ul>
-      <li><a href="/">All PDF tools</a></li>
-      <li><a href="/blog/">Blog</a></li>
-      <li><a href="/about/">About</a></li>
-      <li><a href="/contact/">Contact</a></li>
+<BaseLayout title="404 — page missing" description="The page you're looking for doesn't exist on pdf.oriz.in." noindex={true} pageNum="—">
+  <section class="nf">
+    <p class="nf-num mono">404</p>
+    <h1 class="nf-h">A leaf is missing.</h1>
+    <p class="nf-sub">
+      The page you're looking for doesn't exist on this desk. Try one of these:
+    </p>
+    <ul class="nf-links">
+      <li><a href="/">all twenty-three implements →</a></li>
+      <li><a href="/blog/">blog →</a></li>
+      <li><a href="/about/">about →</a></li>
+      <li><a href="/contact/">contact →</a></li>
     </ul>
   </section>
 </BaseLayout>
 
 <style>
-  .notfound { max-width: var(--container-prose, 720px); margin-inline: auto; padding-block: 5rem 4rem; text-align: center; }
-  .emoji { font-size: 3rem; margin: 0 0 1rem; }
-  h1 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600; letter-spacing: -0.02em; margin: 0 0 1rem; }
-  p { color: var(--color-fg-muted); margin: 0 0 1.5rem; }
-  ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
-  ul a { color: var(--color-accent); }
+  .nf {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+    padding: 5rem clamp(1.25rem, 4vw, 2rem) 4rem;
+    text-align: center;
+    font-family: var(--font-serif);
+  }
+  .nf-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--margin);
+    letter-spacing: 0.16em;
+    margin: 0 0 1rem;
+  }
+  .nf-h {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  .nf-sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--margin);
+    margin: 0 0 2rem;
+  }
+  .nf-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-style: italic;
+  }
+  .nf-links a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+  }
+  .nf-links a:hover { color: var(--ledger); text-decoration-color: var(--ledger); }
 </style>

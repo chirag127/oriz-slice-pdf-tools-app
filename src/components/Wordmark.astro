@@ -1,0 +1,86 @@
+---
+/*
+ * Wordmark — `oriz / pdf-tools` set in GT Sectra italic with a forward-slash
+ * separator (NOT middle-dot — that's image-tools' move).
+ *
+ * Layout: `oriz` upright in display serif, `/` separator in --margin colour,
+ * `pdf-tools` italic in --ledger green. NO vermilion strike on this site —
+ * vermilion is reserved for destructive states only on pdf-tools.
+ *
+ *   <Wordmark />                         → oriz / pdf-tools
+ *   <Wordmark subtitle="account" />      → oriz / account (subsection override)
+ *   <Wordmark size={32} href={null} />   → bare, no link wrapper
+ */
+
+interface Props {
+  /** Sub-section name that replaces "pdf-tools" — rendered in italic ledger green. */
+  subtitle?: string
+  /** Display size in CSS pixels. Defaults to 22 (header lockup). */
+  size?: number
+  /** Wrap the mark in an <a href="…"> — defaults to '/'. Pass null for no wrap. */
+  href?: string | null
+  /** Render as <h1>. Used by the home masthead. */
+  asHeading?: boolean
+}
+
+const {
+  subtitle = 'pdf-tools',
+  size = 22,
+  href = '/',
+  asHeading = false,
+} = Astro.props
+const Tag = asHeading ? 'h1' : ('div' as const)
+---
+
+{
+  href ? (
+    <a class="wm-link" href={href} aria-label={`oriz / ${subtitle}`}>
+      <Tag class="wm" style={`--wm-size: ${size}px;`}>
+        <span class="wm-mark">oriz</span>
+        <span class="wm-sep" aria-hidden="true">/</span>
+        <span class="wm-sub">{subtitle}</span>
+      </Tag>
+    </a>
+  ) : (
+    <Tag class="wm" style={`--wm-size: ${size}px;`}>
+      <span class="wm-mark">oriz</span>
+      <span class="wm-sep" aria-hidden="true">/</span>
+      <span class="wm-sub">{subtitle}</span>
+    </Tag>
+  )
+}
+
+<style>
+  .wm-link {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+  }
+  .wm {
+    display: inline-flex;
+    align-items: baseline;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: var(--wm-size, 22px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .wm-mark {
+    color: var(--ink);
+    font-style: italic;
+  }
+  .wm-sep {
+    margin-inline: 0.32em;
+    color: var(--margin);
+    font-weight: 400;
+    font-style: normal;
+  }
+  .wm-sub {
+    color: var(--ledger);
+    font-style: italic;
+    font-weight: 500;
+  }
+</style>

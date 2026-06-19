@@ -4,21 +4,22 @@ import { FinishSignIn } from '@chirag127/oriz-ui'
 ---
 
 <BaseLayout
-  title="Finishing sign-in — PDF Tools"
+  title="finishing sign-in — oriz / pdf-tools"
   description="Completing email-link sign-in."
   noindex={true}
-  hideSidebar={true}
+  noRunningFoot={true}
 >
   <section class="finish">
-    <FinishSignIn client:load />
+    <FinishSignIn client:only="react" />
   </section>
 </BaseLayout>
 
 <style>
   .finish {
-    max-width: var(--container-prose, 720px);
+    max-width: var(--container-prose);
     margin-inline: auto;
     padding-block: 5rem 4rem;
     text-align: center;
+    font-family: var(--font-serif);
   }
 </style>

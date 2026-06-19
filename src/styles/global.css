@@ -1,21 +1,481 @@
 @import 'tailwindcss';
-@import '@chirag127/oriz-ui/styles';
-@import '@chirag127/oriz-ui/components.css';
+@import './oriz-ui-overrides.css';
 
-/* Site-specific overrides for oriz-pdf-tools. Keep this list as small as
-   possible — anything that's broadly useful belongs in oriz-ui. */
+/*
+ * oriz-pdf-tools — v2 design tokens.
+ *
+ * Cream manuscript surface · ledger-green primary · vermilion reserved for
+ * destructive · ALL-SERIF type stack (Source Serif 4 body, GT Sectra/Source
+ * Serif 4 display, JetBrains Mono numeric ONLY for filesizes/page ranges).
+ *
+ * Family-anchor rules: --paper, --ink, --rule are stable across all 11
+ * sister sites. Site-specific accents (--ledger, --vermilion, --margin)
+ * map this site's brief.
+ *
+ * Legacy --color-* aliases preserve the old chrome that hasn't been
+ * rewritten yet (tool React components, etc.). They map onto the new
+ * tokens so the 23 tool pages and 58 MDX posts inherit the new look.
+ */
 
-/* Skip-link, copied from oriz-home for keyboard accessibility. */
+@theme {
+  --font-display:
+    'GT Sectra', 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-serif:
+    'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  /* All UI is serif on this site — buttons, nav, footer, modal titles. There
+     is intentionally no sans-serif font in the stack. The "sans" alias maps
+     to the same serif so any third-party CSS that hits --font-sans still
+     looks like the rest of the page. */
+  --font-sans:
+    'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --container-page: 1080px;
+  --container-prose: 78ch;
+  --container-blog: 68ch;
+  --container-workbench: 1080px;
+
+  /* ── Tailwind palette overrides — repaint blue → ledger green and red →
+   * vermilion so the existing tool React components stop using Acrobat
+   * blue and Acrobat red. Greys remain neutral (mapped onto manuscript
+   * tokens). This is the cheap path to reskinning 30+ existing islands
+   * without rewriting their JSX. */
+  --color-blue-50:  #EAEFEC;
+  --color-blue-100: #D4DFD9;
+  --color-blue-200: #B0C5BA;
+  --color-blue-300: #8AAA98;
+  --color-blue-400: #618D74;
+  --color-blue-500: #467560;
+  --color-blue-600: #2D4A3E;
+  --color-blue-700: #243A30;
+  --color-blue-800: #1A2A24;
+  --color-blue-900: #121C18;
+
+  --color-red-50:  #F5E6E2;
+  --color-red-100: #EBCEC7;
+  --color-red-200: #DDA89C;
+  --color-red-300: #CC8071;
+  --color-red-400: #BF5D4A;
+  --color-red-500: #B23A2A;
+  --color-red-600: #9B3023;
+  --color-red-700: #80271D;
+  --color-red-800: #631E16;
+  --color-red-900: #4A170F;
+
+  /* The tool components also reach for green-* (privacy badges etc) — keep
+     these pointing at ledger tones too. */
+  --color-green-50:  #EAEFEC;
+  --color-green-100: #D4DFD9;
+  --color-green-200: #B0C5BA;
+  --color-green-600: #2D4A3E;
+  --color-green-700: #243A30;
+  --color-green-800: #1A2A24;
+
+  /* Greys → manuscript paper / ink / margin. */
+  --color-gray-50:  #F8F4EB;
+  --color-gray-100: #EBE3D2;
+  --color-gray-200: #DFD5BF;
+  --color-gray-300: #C9BFAE;
+  --color-gray-400: #A89F8E;
+  --color-gray-500: #8A8270;
+  --color-gray-600: #6B6457;
+  --color-gray-700: #4A453B;
+  --color-gray-800: #2D2A23;
+  --color-gray-900: #1A1814;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* v2 manuscript tokens — cream paper + warm near-black ink + ledger green. */
+    --paper:    #F4EFE6;       /* cream manuscript */
+    --paper-2:  #EBE3D2;       /* code-block tint, 4% darker than paper */
+    --ink:      #1A1814;       /* warm near-black, not pure */
+    --ledger:   #2D4A3E;       /* primary accent — CTAs, links, focus rings */
+    --vermilion:#B23A2A;       /* DESTRUCTIVE / REDACTION / ERROR ONLY */
+    --margin:   #6B6457;       /* gutter text, page numbers, captions */
+    --rule:     #C9BFAE;       /* hairlines, dashed page-breaks, frames */
+    --highlighter: var(--ledger);
+
+    /* Legacy aliases — keep existing routes (tool React components, pages
+       that haven't been rewritten yet) compiling with the new colour-way. */
+    --color-bg:        var(--paper);
+    --color-bg-soft:   var(--paper-2);
+    --color-bg-muted:  #DFD5BF;
+    --color-fg:        var(--ink);
+    --color-prose:     var(--ink);
+    --color-fg-muted:  var(--margin);
+    --color-fg-soft:   #8A8270;
+    --color-border:    var(--rule);
+    --color-accent:    var(--ledger);
+    --color-accent-fg: var(--paper);
+    --radius-card:     0;
+    --radius-button:   2px;
+  }
+
+  /* Dark variant — manuscript-by-candlelight. paper→ink and ink→ivory. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --paper:    #1A1814;
+      --paper-2:  #221F1A;
+      --ink:      #EFE7D6;
+      --ledger:   #5C9379;
+      --vermilion:#D4604F;
+      --margin:   #9A9282;
+      --rule:     #3A352D;
+
+      --color-bg-muted:  #2A2620;
+      --color-fg-soft:   #847C6D;
+      --color-accent-fg: var(--paper);
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  body {
+    background: var(--paper);
+    /* Paper grain — feTurbulence at 8% opacity tiled behind everything. */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.10 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.08 0"/></filter><rect width="240" height="240" filter="url(%23n)"/></svg>');
+    background-repeat: repeat;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.6875; /* 27/16 — brief calls for 16/27 body */
+    overflow-y: scroll;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, kbd, pre, samp, .mono {
+    font-family: var(--font-mono);
+    font-feature-settings: 'tnum' 1, 'zero' 1, 'calt' 0;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--ledger) 25%, transparent);
+    color: var(--ink);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* ── Layout helpers ───────────────────────────────────────────────────── */
+
+/* The reading column — page-shaped, max 78ch wide, with optional notebook
+   gutter for marginalia (page numbers, footnote refs). */
+.column {
+  max-width: var(--container-prose);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.column-blog {
+  max-width: var(--container-blog);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.container-page {
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+
+/* ── Signature: the dashed page-break with § N section bug ───────────── */
+
+hr[data-section] {
+  border: 0;
+  border-top: 1px dashed var(--rule);
+  position: relative;
+  margin: 4rem auto;
+  width: min(100%, var(--container-prose));
+  height: 1px;
+  background: transparent;
+}
+hr[data-section]::before {
+  content: "§ " attr(data-section);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-inline: 0.75rem;
+  background: var(--paper);
+  color: var(--margin);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+/* ── Skip link ────────────────────────────────────────────────────────── */
+
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--color-accent);
-  color: var(--color-accent-fg);
+  background: var(--ledger);
+  color: var(--paper);
   padding: 0.5rem 1rem;
   z-index: 100;
-  border-radius: 0 0 0.5rem 0;
+  font-family: var(--font-serif);
 }
-.skip-link:focus {
-  left: 0;
+.skip-link:focus { left: 0; }
+
+/* ── Page-head + prose utility (used by /about, /contact, /legal/*, …) ─ */
+
+.page-head {
+  padding-block: clamp(2rem, 6vw, 3.5rem) 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  max-width: var(--container-prose);
+  margin-inline: auto;
+}
+.page-head .eyebrow {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-feature-settings: 'smcp' 1;
+  letter-spacing: 0.08em;
+  color: var(--margin);
+  margin: 0 0 0.875rem;
+}
+.page-head .eyebrow a { color: var(--margin); }
+.page-head .eyebrow a:hover { color: var(--ledger); }
+.page-head h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+.page-head .lede,
+.page-head .meta {
+  margin: 0.875rem 0 0;
+  color: var(--margin);
+}
+.page-head .lede { font-size: 1.125rem; font-style: italic; }
+.page-head .meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.prose {
+  padding-block: 2.5rem 4rem;
+  color: var(--ink);
+  line-height: 1.6875;
+  font-size: 16px;
+  font-family: var(--font-serif);
+  max-width: var(--container-prose);
+  margin-inline: auto;
+}
+.prose .lede {
+  font-size: 1.125rem;
+  color: var(--ink);
+  font-style: italic;
+  margin: 0 0 2rem;
+}
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin: 2.5rem 0 1rem;
+}
+.prose h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--ink);
+  margin: 1.75rem 0 0.625rem;
+}
+.prose p { margin: 0 0 1.25rem; }
+.prose a {
+  color: var(--ledger);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in oklab, var(--ledger) 40%, transparent);
+}
+.prose a:hover { text-decoration-color: var(--ledger); }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose ul, .prose ol { padding-left: 1.5rem; margin: 0 0 1.25rem; }
+.prose li { margin-bottom: 0.5rem; }
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.125em 0.375em;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.prose blockquote {
+  border-left: 3px solid var(--vermilion);
+  padding-left: 1rem;
+  margin-left: 0;
+  color: var(--ink);
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+.prose blockquote p { margin: 0; }
+.prose hr {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 2.5rem 0;
+}
+
+/* ── Buttons — all serif, no sans anywhere ──────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding-inline: 1.25rem;
+  background: transparent;
+  color: var(--ledger);
+  border: 1px solid var(--ledger);
+  border-radius: 2px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-feature-settings: 'smcp' 1;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 120ms, color 120ms;
+}
+.btn:hover {
+  background: color-mix(in oklab, var(--ledger) 8%, transparent);
+}
+.btn-primary {
+  background: var(--ledger);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+.btn-primary:hover {
+  background: color-mix(in oklab, var(--ledger) 90%, var(--ink));
+  color: var(--paper);
+}
+.btn-destructive {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+.btn-destructive:hover {
+  background: color-mix(in oklab, var(--vermilion) 8%, transparent);
+}
+
+/* ── Workbench — the double-rule frame for tool surfaces ─────────────── */
+
+.workbench {
+  position: relative;
+  max-width: var(--container-workbench);
+  margin: 2.5rem auto;
+  padding: 1.75rem clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+.workbench::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+.workbench-meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--margin);
+  margin: 0 0 1rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Running-foot rule + domain bug — closes every page like a book ─── */
+
+.running-foot {
+  position: relative;
+  max-width: var(--container-prose);
+  margin: 4rem auto 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--margin);
+}
+.running-foot .domain {
+  padding-inline: 0.75rem;
+  background: var(--paper);
+  position: relative;
+  top: -1.4em;
+  display: inline-block;
+}
+.running-foot .page-num {
+  position: absolute;
+  top: -1.4em;
+  left: 25%;
+  padding-inline: 0.75rem;
+  background: var(--paper);
+  color: var(--margin);
+}
+
+/* ── Small-caps utility (used by nav, captions, headings) ───────────── */
+
+.smallcaps {
+  font-family: var(--font-serif);
+  font-feature-settings: 'smcp' 1;
+  letter-spacing: 0.08em;
+}
+.smallcaps-mono {
+  font-family: var(--font-mono);
+  text-transform: lowercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+}
+
+/* ── Page shell ──────────────────────────────────────────────────────── */
+
+.page-shell {
+  max-width: var(--container-page);
+  margin-inline: auto;
+}
+.page-main { min-width: 0; }
+
+/* ── Scrollbar — discreet, paper-tinted ─────────────────────────────── */
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--rule); }
+::-webkit-scrollbar-thumb:hover { background: var(--margin); }
+
+/* ── Reduced motion ──────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef } from "react";
-import { Upload, FileText, X } from "lucide-react";
 import { formatBytes, MAX_FILE_SIZE } from "../../lib/utils/fileValidation";
 
 interface FileDropzoneProps {
@@ -11,13 +10,19 @@ interface FileDropzoneProps {
 	subtitle?: string;
 }
 
+/*
+ * FileDropzone — manuscript-styled. Single dashed leaf, italic prompt,
+ * mono caption with file size. NO icon, NO emoji — the brief forbids them
+ * in chrome. Errors render in vermilion (the only allowed CTA-adjacent
+ * vermilion: validation errors).
+ */
 export function FileDropzone({
 	accept,
 	multiple = false,
 	maxSize = MAX_FILE_SIZE,
 	onFiles,
-	title = "Drag & Drop your files here",
-	subtitle = "or click to browse",
+	title = "Drop a leaf, or click to browse",
+	subtitle,
 }: FileDropzoneProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -29,16 +34,12 @@ export function FileDropzone({
 		(fileList: FileList | null) => {
 			if (!fileList) return;
 			const files = Array.from(fileList);
-
 			for (const file of files) {
 				if (file.size > maxSize) {
-					setError(
-						`File too large. Maximum size: ${formatBytes(maxSize)}`,
-					);
+					setError(`Leaf too large. Max: ${formatBytes(maxSize)}.`);
 					return;
 				}
 			}
-
 			setError(null);
 			onFiles(files);
 		},
@@ -71,48 +72,21 @@ export function FileDropzone({
 	};
 
 	return (
-		<div className="w-full">
+		<div className="dz-wrap">
 			<button
 				type="button"
-				className={`
-					relative w-full min-h-[200px] sm:min-h-[240px] rounded-xl border-2 border-dashed
-					flex flex-col items-center justify-center gap-3 p-8
-					cursor-pointer transition-all duration-200 outline-none
-					${
-						isDragging
-							? "border-blue-500 bg-blue-50/80"
-							: "border-gray-300 bg-gray-50/50 hover:border-blue-400 hover:bg-blue-50/30"
-					}
-					focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
-				`}
+				className={`dz ${isDragging ? "dz-on" : ""}`}
 				onDragOver={handleDragOver}
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				onClick={handleClick}
 				aria-label="Upload files"
 			>
-				<div
-					className={`
-					flex items-center justify-center size-14 rounded-full transition-all duration-200
-					${isDragging ? "bg-blue-100 scale-110" : "bg-blue-50"}
-				`}
-				>
-					<Upload
-						className={`size-6 transition-colors ${
-							isDragging ? "text-blue-600" : "text-blue-500"
-						}`}
-					/>
-				</div>
-				<div className="text-center">
-					<p className="text-base font-semibold text-gray-900">
-						{title}
-					</p>
-					<p className="text-sm text-gray-500 mt-1">{subtitle}</p>
-				</div>
-				<p className="text-xs text-gray-400 mt-2">
-					Supported: {accept.join(", ")} — Max{" "}
-					{formatBytes(maxSize)}
-				</p>
+				<span className="dz-prompt">{title}</span>
+				{subtitle && <span className="dz-sub">{subtitle}</span>}
+				<span className="dz-meta">
+					{accept.join(" · ")} · max {formatBytes(maxSize)}
+				</span>
 			</button>
 
 			<input
@@ -121,14 +95,67 @@ export function FileDropzone({
 				accept={acceptString}
 				multiple={multiple}
 				onChange={handleChange}
-				className="hidden"
+				className="dz-input"
 			/>
 
-			{error && (
-				<div className="mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-					{error}
-				</div>
-			)}
+			{error && <p className="dz-err">{error}</p>}
+
+			<style>{`
+				.dz-wrap { width: 100%; font-family: var(--font-serif); }
+				.dz {
+					position: relative;
+					width: 100%;
+					min-height: 200px;
+					padding: 2.5rem 1.5rem;
+					background: transparent;
+					border: 1px dashed var(--rule);
+					display: flex;
+					flex-direction: column;
+					gap: 0.5rem;
+					align-items: center;
+					justify-content: center;
+					cursor: pointer;
+					font-family: inherit;
+					color: var(--ink);
+					transition: border-color 120ms;
+				}
+				.dz:hover, .dz-on {
+					border-color: var(--ledger);
+					color: var(--ledger);
+				}
+				.dz:focus-visible {
+					outline: 2px solid var(--ledger);
+					outline-offset: 4px;
+				}
+				.dz-prompt {
+					font-family: var(--font-serif);
+					font-style: italic;
+					font-size: 1.0625rem;
+					color: inherit;
+				}
+				.dz-sub {
+					font-family: var(--font-serif);
+					font-size: 14px;
+					color: var(--margin);
+				}
+				.dz-meta {
+					font-family: var(--font-mono);
+					font-size: 12px;
+					color: var(--margin);
+					letter-spacing: 0.06em;
+				}
+				.dz-input { display: none; }
+				.dz-err {
+					margin: 0.75rem 0 0;
+					padding: 0.625rem 0.875rem;
+					font-family: var(--font-serif);
+					font-style: italic;
+					font-size: 14px;
+					color: var(--vermilion);
+					border: 1px solid color-mix(in oklab, var(--vermilion) 50%, transparent);
+					background: color-mix(in oklab, var(--vermilion) 8%, transparent);
+				}
+			`}</style>
 		</div>
 	);
 }
@@ -143,33 +170,74 @@ export function FileList({ files, onRemove }: FileListProps) {
 	if (files.length === 0) return null;
 
 	return (
-		<div className="w-full mt-4 space-y-2">
+		<ul className="fl">
 			{files.map((file, index) => (
-				<div
-					key={`${file.name}-${index}`}
-					className="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
-				>
-					<div className="flex items-center justify-center size-10 rounded-lg bg-red-50 shrink-0">
-						<FileText className="size-5 text-red-500" />
-					</div>
-					<div className="flex-1 min-w-0">
-						<p className="text-sm font-medium text-gray-900 truncate">
-							{file.name}
-						</p>
-						<p className="text-xs text-gray-500">
-							{formatBytes(file.size)}
-						</p>
-					</div>
+				<li key={`${file.name}-${index}`} className="fl-item">
+					<span className="fl-num mono">
+						{(index + 1).toString().padStart(2, "0")}
+					</span>
+					<span className="fl-name">{file.name}</span>
+					<span className="fl-size mono">{formatBytes(file.size)}</span>
 					<button
 						type="button"
 						onClick={() => onRemove(index)}
-						className="shrink-0 flex items-center justify-center size-8 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+						className="fl-x"
 						aria-label={`Remove ${file.name}`}
 					>
-						<X className="size-4" />
+						×
 					</button>
-				</div>
+				</li>
 			))}
-		</div>
+
+			<style>{`
+				.fl {
+					list-style: none;
+					padding: 0;
+					margin: 1.25rem 0 0;
+					font-family: var(--font-serif);
+					border-top: 1px solid var(--rule);
+				}
+				.fl-item {
+					display: grid;
+					grid-template-columns: 4ch 1fr auto 2.5ch;
+					align-items: center;
+					gap: 0.875rem;
+					padding: 0.75rem 0;
+					border-bottom: 1px solid var(--rule);
+				}
+				.fl-num {
+					font-family: var(--font-mono);
+					font-size: 12px;
+					color: var(--margin);
+					letter-spacing: 0.06em;
+				}
+				.fl-name {
+					font-size: 14px;
+					color: var(--ink);
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+				.fl-size {
+					font-family: var(--font-mono);
+					font-size: 12px;
+					color: var(--margin);
+					letter-spacing: 0.04em;
+				}
+				.fl-x {
+					background: transparent;
+					border: 0;
+					color: var(--margin);
+					font-family: var(--font-serif);
+					font-size: 1.125rem;
+					line-height: 1;
+					cursor: pointer;
+					padding: 0;
+					width: 100%;
+					text-align: right;
+				}
+				.fl-x:hover { color: var(--vermilion); }
+			`}</style>
+		</ul>
 	);
 }

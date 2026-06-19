@@ -16,8 +16,7 @@ const {
   description,
   date,
   category = "PDF Tips",
-  image,
-  author = "OrizPDF Team",
+  author = "Chirag Singhal",
   readingTime = "5 min read",
 } = Astro.props;
 
@@ -30,97 +29,248 @@ const formattedDate = new Date(date).toLocaleDateString("en-US", {
 const canonical = Astro.url.pathname;
 ---
 
-<BaseLayout title={`${title} | OrizPDF Blog`} description={description} canonical={canonical}>
-  <article class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
-    <header class="mb-10">
-      <div class="flex items-center gap-3 mb-4">
-        {category && (
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            {category}
-          </span>
-        )}
-        <time datetime={date} class="text-sm text-gray-500">{formattedDate}</time>
-        <span class="text-sm text-gray-400">•</span>
-        <span class="text-sm text-gray-500">{readingTime}</span>
-      </div>
-      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-4">
-        {title}
-      </h1>
-      <p class="text-xl text-gray-600 leading-relaxed">
-        {description}
-      </p>
-      <div class="mt-6 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-          {author[0]}
-        </div>
-        <div>
-          <p class="text-sm font-medium text-gray-900">{author}</p>
-          <p class="text-xs text-gray-500">Published on {formattedDate}</p>
-        </div>
-      </div>
-    </header>
+<BaseLayout
+  title={`${title} — oriz / pdf-tools blog`}
+  description={description}
+  canonical={canonical}
+  pageNum="iii"
+>
+  <article class="blog-column">
+    <p class="blog-eyebrow smallcaps">
+      <a href="/">tools</a>
+      <span aria-hidden="true">/</span>
+      <a href="/blog/">blog</a>
+      <span aria-hidden="true">/</span>
+      <span>{category.toLowerCase()}</span>
+    </p>
 
-    {image && (
-      <div class="mb-10 rounded-2xl overflow-hidden">
-        <img
-          src={image}
-          alt={title}
-          class="w-full h-64 sm:h-80 object-cover"
-          loading="lazy"
-        />
-      </div>
-    )}
+    <h1 class="blog-h">{title}</h1>
 
-    <div class="prose prose-lg prose-blue max-w-none prose-headings:scroll-mt-20 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-['']">
+    <p class="blog-lede">{description}</p>
+
+    <p class="blog-meta mono">
+      <time datetime={date}>{formattedDate}</time>
+      <span aria-hidden="true">·</span>
+      <span>{readingTime}</span>
+      <span aria-hidden="true">·</span>
+      <span>by {author}</span>
+    </p>
+
+    <hr data-section="i" />
+
+    <div class="blog-body">
       <slot />
     </div>
 
-    <footer class="mt-16 pt-8 border-t border-gray-200">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p class="text-sm text-gray-500">Written by {author}</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-sm text-gray-500">Share:</span>
-          <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`https://pdf.oriz.in${canonical}`)}`} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-500 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://pdf.oriz.in${canonical}`)}&title=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-700 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-        </div>
-      </div>
+    <hr data-section="ii" />
+
+    <footer class="blog-foot">
+      <a href="/blog/" class="blog-back">← all writing</a>
     </footer>
   </article>
 </BaseLayout>
 
 <style>
-  .prose :global(h2) {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    color: #111827;
+  .blog-column {
+    max-width: var(--container-blog);
+    margin-inline: auto;
+    padding: 3rem clamp(1.25rem, 4vw, 2rem) 0;
+    /* 8ch left gutter for marginalia. */
+    padding-left: clamp(1.25rem, 8ch, 4rem);
   }
-  .prose :global(h3) {
-    font-size: 1.375rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    color: #1f2937;
+
+  .blog-eyebrow {
+    margin: 0 0 1rem;
+    color: var(--margin);
+    font-size: 13px;
+    letter-spacing: 0.08em;
   }
-  .prose :global(p) {
-    line-height: 1.8;
-    color: #374151;
+  .blog-eyebrow a { color: var(--margin); }
+  .blog-eyebrow a:hover { color: var(--ledger); }
+  .blog-eyebrow span[aria-hidden] { margin-inline: 0.4em; color: var(--rule); }
+
+  .blog-h {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 1rem;
   }
-  .prose :global(ul), .prose :global(ol) {
-    line-height: 1.8;
-  }
-  .prose :global(blockquote) {
-    border-left: 4px solid #3b82f6;
-    background: #eff6ff;
-    padding: 1rem 1.5rem;
-    border-radius: 0 0.5rem 0.5rem 0;
+  .blog-lede {
+    font-family: var(--font-display);
     font-style: italic;
+    font-size: 1.1875rem;
+    color: var(--margin);
+    line-height: 1.5;
+    margin: 0 0 1rem;
+    max-width: 56ch;
   }
+  .blog-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--margin);
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+  .blog-meta span[aria-hidden] {
+    margin-inline: 0.5rem;
+    color: var(--rule);
+  }
+
+  .blog-body {
+    padding-block: 1rem 2rem;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.6875;
+    color: var(--ink);
+  }
+
+  /* Drop cap on the first paragraph — GT Sectra 64px, 3 lines tall, ledger. */
+  .blog-body :global(> p:first-of-type::first-letter),
+  .blog-body :global(p.dropcap::first-letter) {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    font-weight: 500;
+    color: var(--ledger);
+    float: left;
+    line-height: 0.9;
+    padding: 0.25rem 0.5rem 0 0;
+  }
+
+  .blog-body :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.5rem;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin: 2.5rem 0 1rem;
+  }
+  .blog-body :global(h3) {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin: 1.75rem 0 0.625rem;
+  }
+  .blog-body :global(p) { margin: 0 0 1.25rem; }
+  .blog-body :global(a) {
+    color: var(--ledger);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--ledger) 40%, transparent);
+    text-underline-offset: 3px;
+  }
+  .blog-body :global(a:hover) { text-decoration-color: var(--ledger); }
+  .blog-body :global(strong) { color: var(--ink); font-weight: 600; }
+
+  /* Marginalia: ordered-list numbers float into the left gutter. */
+  .blog-body :global(ol) {
+    list-style: none;
+    counter-reset: ml;
+    padding-left: 0;
+    margin: 0 0 1.25rem;
+  }
+  .blog-body :global(ol > li) {
+    counter-increment: ml;
+    position: relative;
+    padding-left: 4ch;
+    margin-bottom: 0.5rem;
+  }
+  .blog-body :global(ol > li::before) {
+    content: counter(ml, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.125em;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--margin);
+    letter-spacing: 0.06em;
+  }
+
+  .blog-body :global(ul) {
+    list-style: none;
+    padding-left: 0;
+  }
+  .blog-body :global(ul > li) {
+    position: relative;
+    padding-left: 1.5ch;
+    margin-bottom: 0.5rem;
+  }
+  .blog-body :global(ul > li::before) {
+    content: "·";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--margin);
+  }
+
+  /* Pull-quote — vermilion left rule, italic Source Serif 18/30, no marks. */
+  .blog-body :global(blockquote) {
+    border-left: 3px solid var(--vermilion);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin: 1.5rem 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  .blog-body :global(blockquote p) { margin: 0; }
+
+  /* Code — JetBrains Mono on a #EBE3D2 tint, 1px rule left border only. */
+  .blog-body :global(pre) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--paper-2);
+    border-left: 1px solid var(--rule);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .blog-body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0 0.25em;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+  }
+  .blog-body :global(pre code) {
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+
+  /* Footnote refs (sup) and footnotes section at foot above 1px rule. */
+  .blog-body :global(sup),
+  .blog-body :global(.footnote-ref) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--margin);
+    margin-left: 0.125em;
+  }
+  .blog-body :global(.footnotes),
+  .blog-body :global(section.footnotes) {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--margin);
+  }
+  .blog-body :global(.footnotes ol) {
+    counter-reset: fn;
+  }
+
+  .blog-foot {
+    padding-block: 1rem 2rem;
+  }
+  .blog-back {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--margin);
+    font-size: 14px;
+  }
+  .blog-back:hover { color: var(--ledger); }
 </style>

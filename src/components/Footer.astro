@@ -1,99 +1,181 @@
 ---
-import { FAMILY, FAMILY_SITES } from '@chirag127/oriz-ui'
-import { SITE_CONFIG } from '~/lib/siteConfig'
+/*
+ * Footer — colophon. Opens with the running-foot rule + centered domain bug
+ * `─── pdf-tools.oriz.in ───`. Three small-caps Source Serif columns:
+ * COLOPHON / LINKS / FAMILY. Final line is privacy reassurance set in
+ * small-caps separated by middle dots — the ONLY middle dots on the site.
+ *
+ * No newsletter signup, no social icon strip, no emoji. Pure printed-page
+ * attribution.
+ */
+import { FAMILY, FAMILY_SITES } from '~/lib/family'
+
 const year = new Date().getFullYear()
-const familyOthers = FAMILY_SITES.filter((s) => s.slug !== 'pdf-tools')
+const familyOthers = FAMILY_SITES.filter((s) => s.slug !== 'pdf-tools').slice(0, 6)
+
+const deployTime =
+  import.meta.env.PUBLIC_DEPLOY_TIME ?? new Date().toISOString().slice(0, 10)
+const gitSha = import.meta.env.PUBLIC_GIT_SHA ?? 'dev'
 ---
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-col">
-      <p class="footer-brand">📄 {SITE_CONFIG.name}</p>
-      <p class="footer-tag">{SITE_CONFIG.tagline}</p>
-      <p class="footer-tag">
-        Part of the <a href={FAMILY.rootOrigin}>{FAMILY.brand}</a> family by{' '}
-        <a href={`${FAMILY.rootOrigin}/about/`}>{FAMILY.operator.name}</a>.
-      </p>
-    </div>
-
-    <div class="footer-col">
-      <h2 class="footer-h">Site</h2>
-      <ul class="footer-links">
-        <li><a href="/">All tools</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
-        <li><a href="/account/">Account</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h2 class="footer-h">Family</h2>
-      <ul class="footer-links">
-        {familyOthers.map((s) => <li><a href={s.url}>{s.emoji} {s.name}</a></li>)}
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h2 class="footer-h">Legal</h2>
-      <ul class="footer-links">
-        <li><a href="/legal/privacy/">Privacy</a></li>
-        <li><a href="/legal/terms/">Terms</a></li>
-        <li><a href="/legal/disclaimer/">Disclaimer</a></li>
-        <li><a href="/legal/cookies/">Cookies</a></li>
-        <li><a href="/legal/grievance/">Grievance officer</a></li>
-      </ul>
-    </div>
+<footer class="ft">
+  <div class="ft-foot" aria-hidden="false">
+    <span class="ft-foot-rule"></span>
+    <span class="ft-foot-domain">pdf-tools.oriz.in</span>
   </div>
 
-  <div class="footer-bottom">
-    <p>&copy; {year} {FAMILY.operator.name}. All sites built with <a href={`https://github.com/${FAMILY.operator.githubHandle}/oriz`}>oriz</a>.</p>
+  <div class="ft-cols">
+    <section class="ft-col">
+      <h2 class="ft-h">colophon</h2>
+      <p>set in <em>GT Sectra</em></p>
+      <p>&amp; <em>Source Serif 4</em></p>
+      <p>processing on-device only</p>
+      <p>MIT licence</p>
+    </section>
+
+    <section class="ft-col">
+      <h2 class="ft-h">links</h2>
+      <ul>
+        <li><a href={`https://github.com/${FAMILY.operator.githubHandle}/oriz-pdf-tools`}>github</a></li>
+        <li><a href="/blog/">blog</a></li>
+        <li><a href="/about/">about</a></li>
+        <li><a href="/contact/">contact</a></li>
+        <li><a href="/legal/">legal</a></li>
+      </ul>
+    </section>
+
+    <section class="ft-col">
+      <h2 class="ft-h">family</h2>
+      <ul>
+        {familyOthers.map((s) => (
+          <li><a href={s.url}>{s.slug.replace('-tools', '')}</a></li>
+        ))}
+        <li><a href={FAMILY.rootOrigin}>see all →</a></li>
+      </ul>
+    </section>
   </div>
+
+  <p class="ft-attribution">
+    <span>© {year} {FAMILY.operator.name}</span>
+    <span aria-hidden="true">·</span>
+    <span>MIT</span>
+    <span aria-hidden="true">·</span>
+    <span>all processing on-device</span>
+  </p>
+
+  <p class="ft-meta mono">
+    <time datetime={deployTime}>{deployTime}</time>
+    <span aria-hidden="true">·</span>
+    <span>commit {gitSha}</span>
+  </p>
 </footer>
 
 <style>
-  .site-footer {
-    margin-top: 6rem;
-    padding-block: 3rem 1.5rem;
-    border-top: 1px solid var(--color-border);
-    background: var(--color-bg-soft);
-  }
-  .footer-inner {
-    max-width: var(--container-page, 1200px);
+  .ft {
+    margin-top: 5rem;
+    padding: 3rem clamp(1rem, 4vw, 2rem) 2rem;
+    max-width: var(--container-page);
     margin-inline: auto;
-    padding-inline: clamp(1rem, 4vw, 2rem);
+    color: var(--ink);
+  }
+
+  /* Running-foot — domain bug centered on a 1px ledger rule. */
+  .ft-foot {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    height: 1.5em;
+  }
+  .ft-foot-rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--rule);
+    transform: translateY(-50%);
+  }
+  .ft-foot-domain {
+    position: relative;
+    background: var(--paper);
+    padding-inline: 1rem;
+    color: var(--margin);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+  }
+
+  .ft-cols {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
+    margin-bottom: 3rem;
   }
-  @media (min-width: 640px) { .footer-inner { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .footer-inner { grid-template-columns: 2fr 1fr 1fr 1fr; } }
-  .footer-brand {
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: 1.5rem;
-    font-weight: 600;
+  @media (min-width: 640px) {
+    .ft-cols { grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+  }
+
+  .ft-col p,
+  .ft-col li {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--ink);
     margin: 0 0 0.5rem;
+    line-height: 1.6;
   }
-  .footer-tag { color: var(--color-fg-muted); margin: 0 0 0.5rem; max-width: 36ch; }
-  .footer-tag a { color: var(--color-fg); }
-  .footer-h {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-fg-muted);
+  .ft-col em { color: var(--margin); }
+  .ft-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ft-col a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+  }
+  .ft-col a:hover {
+    color: var(--ledger);
+    text-decoration-color: var(--ledger);
+  }
+  .ft-h {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-feature-settings: 'smcp' 1;
+    letter-spacing: 0.12em;
+    color: var(--margin);
+    font-weight: 500;
     margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
   }
-  .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  .footer-links a { color: var(--color-fg-muted); text-decoration: none; font-size: 0.9375rem; }
-  .footer-links a:hover { color: var(--color-fg); }
-  .footer-bottom {
-    max-width: var(--container-page, 1200px);
-    margin: 2.5rem auto 0;
-    padding: 1.5rem clamp(1rem, 4vw, 2rem) 0;
-    border-top: 1px solid var(--color-border);
-    color: var(--color-fg-soft);
-    font-size: 0.8125rem;
+
+  .ft-attribution {
+    text-align: center;
+    margin: 0 0 0.75rem;
+    color: var(--margin);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-feature-settings: 'smcp' 1;
+    letter-spacing: 0.06em;
   }
-  .footer-bottom p { margin: 0; }
-  .footer-bottom a { color: var(--color-fg-muted); }
+  .ft-attribution span[aria-hidden] {
+    margin-inline: 0.5rem;
+    color: var(--rule);
+  }
+
+  .ft-meta {
+    text-align: center;
+    margin: 0;
+    color: var(--margin);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .ft-meta span[aria-hidden] {
+    margin-inline: 0.5rem;
+    color: var(--rule);
+  }
 </style>

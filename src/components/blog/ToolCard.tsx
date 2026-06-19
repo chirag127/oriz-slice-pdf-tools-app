@@ -1,4 +1,4 @@
-import { tools } from "../data/tools";
+import { tools } from "../../data/tools";
 
 const iconMap: Record<string, string> = {
   merge: "🔥", split: "✂️", "trash-2": "🗑️", "file-output": "📄",

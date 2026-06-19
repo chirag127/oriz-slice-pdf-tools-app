@@ -108,53 +108,159 @@ const posts = [
   { slug: "pdf-photo-album", title: "Creating Digital Photo Albums in PDF Format", date: "2025-12-15", category: "Design", description: "Compile your photos into beautiful PDF photo albums." },
 ];
 
-const pageTitle = "Blog | OrizPDF — PDF Tips, Guides & Tutorials";
-const pageDescription = "Expert guides and tutorials on PDF tools, document management, and productivity. Learn how to merge, split, compress, convert, and edit PDFs.";
+const pageTitle = "blog — oriz / pdf-tools";
+const pageDescription = "Long-form guides on PDFs, signatures, redaction, and the documents craft. From the makers of pdf.oriz.in.";
+
+// Group posts by month for the ledger view.
+type Post = (typeof posts)[number];
+const byMonth = posts.reduce<Record<string, Post[]>>((acc, p) => {
+  const key = p.date.slice(0, 7); // YYYY-MM
+  (acc[key] ||= []).push(p);
+  return acc;
+}, {});
+const months = Object.keys(byMonth).sort().reverse();
+const monthLabel = (key: string) => {
+  const [y, m] = key.split("-");
+  return new Date(+y, +m - 1, 1).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+};
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} canonical="/blog">
-  <div class="bg-gradient-to-b from-blue-50 to-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-      <div class="text-center mb-12">
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-          OrizPDF Blog
-        </h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Expert guides, tips, and tutorials on PDF tools and document management.
-        </p>
-      </div>
+<BaseLayout title={pageTitle} description={pageDescription} canonical="/blog/" pageNum="ii">
+  <article class="blog-index">
+    <header class="bi-head">
+      <p class="bi-eyebrow smallcaps">no. {posts.length} entries · documents craft</p>
+      <h1 class="bi-h">Notes on the documents craft.</h1>
+      <p class="bi-lede">
+        Long-form on PDFs, signatures, redaction, and the small mechanics of
+        keeping a document together. Written in Bhubaneswar.
+      </p>
+    </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <a
-            href={`/blog/${post.slug}`}
-            class="group block bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all duration-200"
-          >
-            <div class="p-6">
-              <div class="flex items-center gap-2 mb-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {post.category}
-                </span>
-                <time class="text-xs text-gray-500">{post.date}</time>
-              </div>
-              <h2 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2">
-                {post.title}
-              </h2>
-              <p class="text-sm text-gray-600 line-clamp-3">
-                {post.description}
-              </p>
-            </div>
-            <div class="px-6 pb-4">
-              <span class="text-sm font-medium text-blue-600 group-hover:text-blue-700 flex items-center gap-1">
-                Read more
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </div>
+    <hr data-section="i" />
+
+    {months.map((mk, i) => (
+      <section class="bi-month">
+        <h2 class="bi-month-h smallcaps">{monthLabel(mk)}</h2>
+        <ol class="bi-list">
+          {byMonth[mk].map((p) => (
+            <li class="bi-item">
+              <span class="bi-day mono">{p.date.slice(8, 10)}</span>
+              <a class="bi-link" href={`/blog/${p.slug}/`}>
+                <span class="bi-title">{p.title}</span>
+                <span class="bi-cat smallcaps">{p.category.toLowerCase()}</span>
+                <span class="bi-desc">{p.description}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        {i < months.length - 1 && <hr data-section={(i + 2).toString().padStart(1, "0")} />}
+      </section>
+    ))}
+  </article>
 </BaseLayout>
+
+<style>
+  .blog-index {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+    padding: 3rem clamp(1.25rem, 4vw, 2rem) 0;
+    padding-left: clamp(1.25rem, 8ch, 4rem);
+  }
+
+  .bi-head { padding-block: 1rem 2rem; }
+  .bi-eyebrow {
+    font-size: 13px;
+    color: var(--margin);
+    margin: 0 0 1rem;
+  }
+  .bi-h {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  .bi-lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--margin);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  .bi-month-h {
+    font-size: 13px;
+    color: var(--margin);
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+    letter-spacing: 0.12em;
+  }
+
+  .bi-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .bi-item {
+    display: grid;
+    grid-template-columns: 4ch 1fr;
+    gap: 0.875rem;
+    padding-block: 0.875rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .bi-day {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--margin);
+    letter-spacing: 0.06em;
+    padding-top: 0.25em;
+  }
+  .bi-link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 0.125rem 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    align-items: baseline;
+  }
+  .bi-link:hover .bi-title {
+    color: var(--ledger);
+    text-decoration: underline;
+    text-decoration-color: var(--ledger);
+    text-underline-offset: 3px;
+  }
+  .bi-title {
+    grid-column: 1;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .bi-cat {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--font-serif);
+    font-size: 12px;
+    color: var(--margin);
+    letter-spacing: 0.1em;
+    align-self: baseline;
+  }
+  .bi-desc {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--margin);
+    line-height: 1.5;
+    margin-top: 0.125rem;
+  }
+</style>

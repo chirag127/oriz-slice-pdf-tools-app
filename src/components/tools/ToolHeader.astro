@@ -1,53 +1,113 @@
 ---
+/*
+ * ToolHeader — the column→workbench transition entry.
+ *
+ * Renders the breadcrumb + tool title + two-paragraph description in the
+ * 78ch reading column, then a § page-break. The actual workbench (file
+ * dropzone, page thumbnails, "Bind document" CTA) is the tool React
+ * island that follows in the page.
+ *
+ * Voice cue: tools are "implements" with a verb name like "bind" not
+ * "merge PDF". Title still uses the human name from data/tools.ts.
+ */
+
 interface Props {
-	toolName: string;
-	toolSlug: string;
-	category: string;
-	description: string;
+  toolName: string
+  toolSlug: string
+  category: string
+  description: string
+  /** Section number that the leading § page-break renders. */
+  section?: string
 }
 
-const { toolName, toolSlug, category, description } = Astro.props;
+const { toolName, toolSlug, description, section = 'i' } = Astro.props
+
+// Map data-categories onto the four column labels from the home TOC.
+const COL_LABEL: Record<string, string> = {
+  organize: 'organise',
+  optimize: 'organise',
+  edit: 'organise',
+  'convert-to-pdf': 'convert',
+  'convert-from-pdf': 'convert',
+  security: 'secure',
+  ai: 'read',
+}
+const colLabel = COL_LABEL[Astro.props.category] ?? 'tools'
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/30 border-b border-gray-200/60">
-	<!-- Decorative background elements -->
-	<div class="absolute inset-0 overflow-hidden pointer-events-none">
-		<div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl"></div>
-		<div class="absolute -bottom-16 -left-16 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl"></div>
-		<!-- Subtle grid pattern -->
-		<div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle at 1px 1px, #3b82f6 1px, transparent 0); background-size: 24px 24px;"></div>
-	</div>
+<section class="th-column">
+  <p class="th-eyebrow smallcaps">
+    <a href="/">tools</a>
+    <span aria-hidden="true">/</span>
+    <a href={`/#${colLabel}`}>{colLabel}</a>
+    <span aria-hidden="true">/</span>
+    <span>{toolName.toLowerCase()}</span>
+  </p>
 
-	<div class="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-		<!-- Breadcrumb -->
-		<nav class="flex items-center gap-2 text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
-			<a href="/" class="hover:text-blue-600 transition-colors">Home</a>
-			<svg class="size-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-			</svg>
-			<a href={`/#tools`} class="hover:text-blue-600 transition-colors">Tools</a>
-			<svg class="size-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-			</svg>
-			<span class="text-gray-900 font-medium">{toolName}</span>
-		</nav>
+  <h1 class="th-title">{toolName}</h1>
 
-		<div class="flex items-start gap-4">
-			<div class="flex-1">
-				<h1 class="font-display text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-3">
-					{toolName}
-				</h1>
-				<p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl">
-					{description}
-				</p>
-			</div>
-			<!-- Trust badge -->
-			<div class="hidden sm:flex flex-col items-center gap-1.5 px-4 py-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/60 shadow-sm">
-				<svg class="size-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-				</svg>
-				<span class="text-[11px] font-semibold text-gray-600 leading-tight text-center">100% Private</span>
-			</div>
-		</div>
-	</div>
+  <p class="th-lede">
+    {description}
+  </p>
+
+  <p class="th-promise">
+    Files stay on this device. The PDF you load is processed in your browser
+    using <code>pdf-lib</code> and friends, then saved back to disk — no upload,
+    no server, no copy kept.
+  </p>
 </section>
+
+<hr data-section={section} />
+
+<style>
+  .th-column {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+    padding: 3rem clamp(1.25rem, 4vw, 2rem) 1rem;
+  }
+  .th-eyebrow {
+    margin: 0 0 1.25rem;
+    color: var(--margin);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+  .th-eyebrow a { color: var(--margin); }
+  .th-eyebrow a:hover { color: var(--ledger); }
+  .th-eyebrow span[aria-hidden] { margin-inline: 0.4em; color: var(--rule); }
+
+  .th-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.875rem, 4.5vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+
+  .th-lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.1875rem;
+    color: var(--margin);
+    line-height: 1.5;
+    margin: 0 0 1rem;
+    max-width: 56ch;
+  }
+
+  .th-promise {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 0;
+    max-width: 65ch;
+  }
+  .th-promise code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0 0.25em;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+  }
+</style>

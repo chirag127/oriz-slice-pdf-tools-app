@@ -1,89 +1,149 @@
 ---
+/*
+ * Header — sticky 64px chrome with double-rule baseline + paper-grain noise.
+ *
+ *   ┌──────────────────────────────────────────────────────────────────┐
+ *   │  ⌐page  oriz / pdf-tools         TOOLS · BLOG · ABOUT  Sign in  │
+ *   ├──────────────────────────────────────────────────────────────────┤  ← 1px ink
+ *   │ ─────────────────────────────────────────────────────────────── ─ │  ← 1px rule, 3px gap
+ *   └──────────────────────────────────────────────────────────────────┘
+ *
+ * Background: --paper at 92% with paper-grain SVG (8% opacity feTurbulence)
+ * layered behind a 12px backdrop-blur.
+ *
+ * Glyph: 12×16 SVG dog-eared-page (folded top-right corner, single fold-line
+ * stroke). NOT emoji — emoji is forbidden in chrome on this site.
+ *
+ * Nav: small-caps Source Serif 13px, TOOLS · BLOG · ABOUT. On hover, a `§`
+ * mark slides in left of the link via ::before; active route gets a 2px
+ * ledger underline 6px below the baseline.
+ */
+import Wordmark from '~/components/Wordmark.astro'
 import HeaderControls from '~/components/HeaderControls.tsx'
-import { FAMILY, FAMILY_SITES } from '@chirag127/oriz-ui'
-import { SITE_CONFIG } from '~/lib/siteConfig'
+
+const path = Astro.url.pathname
+const isActive = (prefix: string) =>
+  prefix === '/' ? path === '/' : path.startsWith(prefix)
 ---
 
-<header class="site-header">
-  <div class="header-inner">
-    <a href={FAMILY.rootOrigin} class="brand" aria-label={`${FAMILY.brand} home`}>
-      <span class="brand-mark">{FAMILY.brand}</span>
-      <span class="brand-dot">.</span>
+<header class="hd">
+  <div class="hd-grain" aria-hidden="true"></div>
+  <div class="container-page hd-inner">
+    <a class="hd-brand" href="/" aria-label="oriz / pdf-tools home">
+      <svg class="hd-glyph" width="12" height="16" viewBox="0 0 12 16" fill="none" aria-hidden="true">
+        <path d="M0.5 0.5 H8 L11.5 4 V15.5 H0.5 Z" stroke="currentColor" stroke-width="1" fill="none" />
+        <path d="M8 0.5 V4 H11.5" stroke="currentColor" stroke-width="1" fill="none" />
+      </svg>
+      <Wordmark size={20} href={null} />
     </a>
-    <span class="site-badge" aria-hidden="true">📄 {SITE_CONFIG.name}</span>
 
-    <nav aria-label="Primary" class="primary-nav">
-      <a href="/">Tools</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about/">About</a>
-      <a href="/contact/">Contact</a>
+    <nav class="hd-nav" aria-label="Primary">
+      <a href="/" class:list={['hd-nav-a', { active: isActive('/') && path === '/' }]}>tools</a>
+      <a href="/blog/" class:list={['hd-nav-a', { active: isActive('/blog') }]}>blog</a>
+      <a href="/about/" class:list={['hd-nav-a', { active: isActive('/about') }]}>about</a>
     </nav>
 
-    <HeaderControls client:idle sites={FAMILY_SITES} />
+    <div class="hd-ctl"><HeaderControls client:idle /></div>
   </div>
+  <div class="hd-rules" aria-hidden="true"></div>
 </header>
 
 <style>
-  .site-header {
+  .hd {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in oklab, var(--color-bg) 85%, transparent);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--paper) 92%, transparent);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
   }
-  .header-inner {
-    max-width: var(--container-page, 1200px);
-    margin-inline: auto;
-    padding-inline: clamp(1rem, 4vw, 2rem);
+  .hd-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 0.10 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.08 0"/></filter><rect width="160" height="160" filter="url(%23g)"/></svg>');
+    opacity: 1;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .hd-rules {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background:
+      linear-gradient(to bottom,
+        var(--ink) 0,        var(--ink) 1px,
+        transparent 1px,     transparent 3px,
+        var(--rule) 3px,     var(--rule) 4px);
+    pointer-events: none;
+  }
+  .hd-inner {
     height: 64px;
     display: flex;
     align-items: center;
-    gap: 1rem;
-  }
-  .brand {
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    color: var(--color-fg);
-    line-height: 1;
-  }
-  .brand-dot {
-    color: var(--color-accent);
-  }
-  .site-badge {
-    display: none;
-    padding: 0.25rem 0.625rem;
-    border-radius: 999px;
-    background: var(--color-bg-soft);
-    border: 1px solid var(--color-border);
-    color: var(--color-fg-muted);
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-  .primary-nav {
-    display: none;
     gap: 1.25rem;
-    flex: 1;
-    font-size: 0.9375rem;
   }
-  .primary-nav a {
-    color: var(--color-fg-muted);
+  .hd-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
     text-decoration: none;
+    flex: 0 0 auto;
   }
-  .primary-nav a:hover {
-    color: var(--color-fg);
+  .hd-glyph {
+    color: var(--margin);
+    flex: 0 0 auto;
   }
+  .hd-nav {
+    display: none;
+    margin-left: 1.5rem;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .hd-nav-a {
+    position: relative;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-feature-settings: 'smcp' 1;
+    letter-spacing: 0.1em;
+    color: var(--margin);
+    text-decoration: none;
+    padding-block: 0.25rem;
+  }
+  .hd-nav-a:hover {
+    color: var(--ink);
+  }
+  .hd-nav-a:hover::before {
+    content: "§";
+    position: absolute;
+    right: calc(100% + 0.25rem);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ledger);
+    font-style: italic;
+    font-feature-settings: normal;
+  }
+  .hd-nav-a.active {
+    color: var(--ink);
+  }
+  .hd-nav-a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    height: 2px;
+    background: var(--ledger);
+  }
+  .hd-ctl {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+  }
+
   @media (min-width: 768px) {
-    .site-badge {
-      display: inline-flex;
-    }
-    .primary-nav {
-      display: flex;
-      margin-left: 0.5rem;
-    }
+    .hd-nav { display: inline-flex; }
   }
 </style>

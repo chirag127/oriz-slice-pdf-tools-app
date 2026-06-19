@@ -1,0 +1,97 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import ToolHeader from "~/components/tools/ToolHeader.astro";
+import { ToolSidebar } from "~/components/tools/ToolSidebar";
+import { ToolFAQ } from "~/components/tools/ToolFAQ";
+import { getToolBySlug } from "~/data/tools";
+
+interface Props {
+	slug: string;
+	title: string;
+	description: string;
+	faqs: { question: string; answer: string }[];
+	/** Roman section numbers for the dashed page-breaks. */
+	pageNum?: string;
+}
+
+const { slug, title, description, faqs, pageNum = "2" } = Astro.props;
+const tool = getToolBySlug(slug)!;
+---
+
+<BaseLayout title={title} description={description} canonical={`/tools/${slug}/`} pageNum={pageNum}>
+	<ToolHeader
+		toolName={tool.name}
+		toolSlug={tool.slug}
+		category={tool.category}
+		description={tool.description}
+		section="i"
+	/>
+
+	<div class="tool-shell">
+		<div class="tool-main">
+			<!-- Workbench: the React tool island sits inside this double-rule frame. -->
+			<div class="workbench">
+				<p class="workbench-meta">
+					<em>workbench</em> · drop a leaf to begin
+				</p>
+				<div id="tool-mount" data-tool-slug={slug}>
+					<div class="tool-loading">
+						<p>Preparing implements…</p>
+					</div>
+				</div>
+			</div>
+
+			<hr data-section="ii" />
+
+			<article class="tool-prose prose">
+				<slot />
+			</article>
+
+			<hr data-section="iii" />
+
+			<ToolFAQ client:load items={faqs} toolName={tool.name} />
+		</div>
+
+		<aside class="tool-rail">
+			<ToolSidebar client:load currentSlug={slug} />
+		</aside>
+	</div>
+</BaseLayout>
+
+<style>
+	.tool-shell {
+		max-width: var(--container-page);
+		margin-inline: auto;
+		padding: 0 clamp(1rem, 4vw, 2rem) 2rem;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 3rem;
+	}
+	@media (min-width: 1024px) {
+		.tool-shell {
+			grid-template-columns: minmax(0, 1fr) 240px;
+			gap: 3rem;
+		}
+	}
+	.tool-main { min-width: 0; }
+	.tool-rail {
+		font-family: var(--font-serif);
+	}
+
+	.tool-loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 240px;
+		font-family: var(--font-serif);
+		font-style: italic;
+		color: var(--margin);
+	}
+	.tool-loading p { margin: 0; }
+
+	.tool-prose {
+		max-width: 65ch;
+		margin: 2rem 0 0;
+		padding: 0;
+	}
+</style>

@@ -1,28 +1,31 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { ContactForm, FAMILY } from '@chirag127/oriz-ui'
+import { ContactForm } from '@chirag127/oriz-ui'
+import { FAMILY } from '~/lib/family'
 ---
 
 <BaseLayout
-  title="Contact — PDF Tools"
+  title="contact — oriz / pdf-tools"
   description="Get in touch about pdf.oriz.in — bug reports, feature requests, partnerships."
-  hideSidebar={true}
+  pageNum="ii"
 >
-  <header class="page-head">
-    <p class="eyebrow"><a href="/">PDF Tools</a> / Contact</p>
-    <h1>Contact</h1>
-  </header>
+  <div class="page-head">
+    <p class="eyebrow"><a href="/">tools</a> / contact</p>
+    <h1>Contact.</h1>
+    <p class="lede">
+      Bug, idea, or an implement you wish existed? Email is fastest:
+      <a href={`mailto:${FAMILY.operator.email}`}><strong>{FAMILY.operator.email}</strong></a>.
+    </p>
+  </div>
+
+  <hr data-section="i" />
 
   <section class="prose">
-    <p class="lede">
-      Got a bug, idea, or a PDF tool you wish existed? The fastest way to reach me
-      is email: <a href={`mailto:${FAMILY.operator.email}`}><strong>{FAMILY.operator.email}</strong></a>.
-    </p>
     <p>
-      Since every PDF tool here runs entirely in your browser, I can't see your
-      files or recover them — but I can absolutely fix bugs, ship missing
-      features, and answer anything else. The form below posts to Web3Forms which
-      forwards to my inbox; no data is stored on this site.
+      Since every tool runs entirely in your browser, I can't see your files
+      or recover them — but I can fix bugs, ship missing implements, and
+      answer anything else. The form below posts to Web3Forms which forwards
+      to my inbox; nothing about the message is stored on this site.
     </p>
 
     <ContactForm
@@ -33,31 +36,8 @@ import { ContactForm, FAMILY } from '@chirag127/oriz-ui'
 
     <p class="meta">
       For privacy questions or DMCA notices, see the
-      <a href="/legal/grievance/">grievance officer</a> page (mandatory under IT Rules 2021).
+      <a href="/legal/grievance/">grievance officer</a> page (mandatory under
+      IT Rules 2021).
     </p>
   </section>
 </BaseLayout>
-
-<style>
-  .page-head {
-    max-width: var(--container-prose, 720px);
-    margin-inline: auto;
-    padding-block: 3rem 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0 0 0.5rem; }
-  .eyebrow a { color: var(--color-fg-muted); text-decoration: none; }
-  h1 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
-  .prose {
-    max-width: var(--container-prose, 720px);
-    margin-inline: auto;
-    padding-block: 2.5rem 4rem;
-    color: var(--color-prose);
-    line-height: 1.7;
-    font-size: 1.0625rem;
-  }
-  .prose .lede { font-size: 1.1875rem; color: var(--color-fg); margin: 0 0 1.5rem; }
-  .prose a { color: var(--color-accent); }
-  .prose p { margin: 0 0 1.25rem; }
-  .meta { font-size: 0.875rem; color: var(--color-fg-muted); margin-top: 2rem; }
-</style>
