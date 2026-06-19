@@ -1,7 +1,9 @@
-# Cloudflare configuration
-CLOUDFLARE_ACCOUNT_ID = "6a6349fe1568743539433bf10f23ffeb"
-CLOUDFLARE_EMAIL = "whyiswhen@gmail.com"
-CLOUDFLARE_API_TOKEN = "99fe5f342556fb3a1585eefe7bcdb93af0c2c"
+# Cloudflare Workers static-assets config for oriz-pdf-tools.
+# Custom domain bound via dashboard: pdf.oriz.in -> oriz-pdf-tools
+name = "oriz-pdf-tools"
+compatibility_date = "2026-06-17"
+compatibility_flags = ["nodejs_compat"]
 
-[pages]
-project_name = "orizpdf"
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"

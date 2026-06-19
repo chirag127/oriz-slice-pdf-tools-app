@@ -1,0 +1,75 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const updated = "2026-06-19";
+---
+
+<BaseLayout
+	title="Terms of use — PDF Tools"
+	description="The rules for using pdf.oriz.in."
+	canonical="/legal/terms"
+>
+	<section class="bg-gradient-to-br from-slate-50 to-blue-50/30 border-b border-gray-200/60">
+		<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+			<p class="text-sm text-gray-500 mb-2">
+				<a href="/" class="hover:text-gray-900">PDF Tools</a> /
+				<a href="/legal/" class="hover:text-gray-900">Legal</a> / Terms
+			</p>
+			<h1 class="font-display text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+				Terms of use
+			</h1>
+			<p class="text-gray-500 text-sm">Last updated: {updated}</p>
+		</div>
+	</section>
+
+	<article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 prose prose-gray max-w-none">
+		<p>
+			By using pdf.oriz.in or any <code>*.oriz.in</code> site, you agree to these terms.
+			They are short on purpose.
+		</p>
+
+		<h2>Use the sites lawfully</h2>
+		<p>
+			Don't try to break the sites, scrape them at abusive rates, or use them
+			to harass others. Account takeover, copyright infringement, and any
+			activity prohibited under Indian law are forbidden. Don't use these
+			tools to process content you don't have the right to process.
+		</p>
+
+		<h2>Content is provided as-is</h2>
+		<p>
+			PDF tools on pdf.oriz.in are provided for information and convenience
+			only. They are not professional advice. Verify outputs before relying on
+			them, especially for legal or financial documents. See the full
+			<a href="/legal/disclaimer/">disclaimer</a>.
+		</p>
+
+		<h2>Your content</h2>
+		<p>
+			Anything you process with our tools stays yours and stays on your device.
+			We do not receive a copy of your files — they are processed entirely in
+			your browser. Account preferences and settings stay with you.
+		</p>
+
+		<h2>Termination</h2>
+		<p>
+			You can delete your account at any time from the
+			<a href="/account/">account page</a>. We can suspend accounts engaged in
+			abuse without notice.
+		</p>
+
+		<h2>Limitation of liability</h2>
+		<p>
+			To the maximum extent permitted by law, oriz and its operator are not
+			liable for any indirect or consequential damages arising from use of
+			the sites. Since processing happens in your browser, we cannot recover
+			lost or corrupted files; keep backups of important documents.
+		</p>
+
+		<h2>Governing law</h2>
+		<p>
+			These terms are governed by the laws of India. Disputes will be settled
+			in the courts of Bhubaneswar, Odisha.
+		</p>
+	</article>
+</BaseLayout>

@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const updated = "2026-06-19";
+---
+
+<BaseLayout
+	title="Disclaimer — PDF Tools"
+	description="What pdf.oriz.in is and isn't."
+	canonical="/legal/disclaimer"
+>
+	<section class="bg-gradient-to-br from-slate-50 to-blue-50/30 border-b border-gray-200/60">
+		<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+			<p class="text-sm text-gray-500 mb-2">
+				<a href="/" class="hover:text-gray-900">PDF Tools</a> /
+				<a href="/legal/" class="hover:text-gray-900">Legal</a> / Disclaimer
+			</p>
+			<h1 class="font-display text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+				Disclaimer
+			</h1>
+			<p class="text-gray-500 text-sm">Last updated: {updated}</p>
+		</div>
+	</section>
+
+	<article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 prose prose-gray max-w-none">
+		<p>
+			Everything on pdf.oriz.in is published in good faith for general information
+			only. Use it at your own risk.
+		</p>
+
+		<h2>Tool accuracy</h2>
+		<p>
+			PDF tools on this site (merge, split, compress, OCR, convert, etc.) operate on
+			the file you provide and produce a best-effort result. We do not guarantee
+			lossless conversions, exact preservation of formatting across formats, or
+			accurate OCR for every script and layout. Verify the output before relying on
+			it for anything that matters.
+		</p>
+
+		<h2>Not legal advice</h2>
+		<p>
+			Articles touching on tax, regulation, or compliance reflect the author's
+			reading of the rules at the time of writing. Rules change. Verify with
+			your own counsel before acting.
+		</p>
+
+		<h2>Not financial or medical advice</h2>
+		<p>
+			Anything tangentially related to finance or health on this site is for general
+			awareness only. It is not a substitute for advice from a qualified professional.
+		</p>
+
+		<h2>External links</h2>
+		<p>
+			We link to third-party sites we find useful. We don't control their
+			content, and inclusion is not an endorsement.
+		</p>
+
+		<h2>Affiliate disclosure</h2>
+		<p>
+			Where applicable, oriz may earn a referral fee when you sign up to a
+			service via certain links. This never affects what we recommend, and any
+			such links will be marked.
+		</p>
+	</article>
+</BaseLayout>

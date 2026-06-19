@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const sections = [
+	{ slug: "privacy", label: "Privacy policy", desc: "What we collect, what we don't, your rights." },
+	{ slug: "terms", label: "Terms of use", desc: "The rules for using pdf.oriz.in." },
+	{ slug: "disclaimer", label: "Disclaimer", desc: "Not financial / medical / legal advice." },
+	{ slug: "cookies", label: "Cookie policy", desc: "What cookies and localStorage we set." },
+	{ slug: "grievance", label: "Grievance officer", desc: "Mandatory contact under IT Rules 2021." },
+];
+---
+
+<BaseLayout
+	title="Legal — PDF Tools"
+	description="Privacy, terms, and grievance contact for pdf.oriz.in."
+	canonical="/legal"
+>
+	<section class="bg-gradient-to-br from-slate-50 to-blue-50/30 border-b border-gray-200/60">
+		<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+			<p class="text-sm text-gray-500 mb-2">
+				<a href="/" class="hover:text-gray-900">PDF Tools</a> / Legal
+			</p>
+			<h1 class="font-display text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+				Legal
+			</h1>
+		</div>
+	</section>
+
+	<section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+		<ul class="flex flex-col gap-3 list-none p-0">
+			{sections.map((s) => (
+				<li>
+					<a
+						href={`/legal/${s.slug}/`}
+						class="card grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-5 no-underline hover:shadow-lg"
+					>
+						<div>
+							<h2 class="font-display text-lg font-semibold text-gray-900 mb-1">{s.label}</h2>
+							<p class="text-sm text-gray-600 m-0">{s.desc}</p>
+						</div>
+						<span class="text-gray-400 text-lg" aria-hidden="true">→</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+</BaseLayout>

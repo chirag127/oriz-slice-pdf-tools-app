@@ -1,0 +1,104 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+---
+
+<BaseLayout
+	title="Contact — PDF Tools"
+	description="Get in touch about OrizPDF — bug reports, feature requests, partnerships."
+	canonical="/contact"
+>
+	<section class="bg-gradient-to-br from-slate-50 to-blue-50/30 border-b border-gray-200/60">
+		<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+			<p class="text-sm text-gray-500 mb-2">
+				<a href="/" class="hover:text-gray-900">PDF Tools</a> / Contact
+			</p>
+			<h1 class="font-display text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+				Contact
+			</h1>
+		</div>
+	</section>
+
+	<article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 prose prose-gray max-w-none">
+		<p class="lead">
+			Got a bug, idea, or a PDF tool you wish existed? The fastest way to reach me is email:
+			<a href="mailto:whyiswhen@gmail.com"><strong>whyiswhen@gmail.com</strong></a>.
+		</p>
+		<p>
+			Since every PDF tool here runs entirely in your browser, I can't see your files or
+			recover them — but I can absolutely fix bugs, ship missing features, and answer
+			anything else. The form below posts to Web3Forms which forwards to my inbox; no data
+			is stored on this site.
+		</p>
+
+		<form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+			<input type="hidden" name="access_key" value={web3formsKey} />
+			<input type="hidden" name="from_name" value="pdf.oriz.in contact form" />
+			<input
+				type="text"
+				name="botcheck"
+				class="hp"
+				tabindex="-1"
+				autocomplete="off"
+			/>
+
+			<label class="field">
+				<span>Your name</span>
+				<input type="text" name="name" required autocomplete="name" />
+			</label>
+			<label class="field">
+				<span>Email</span>
+				<input type="email" name="email" required autocomplete="email" />
+			</label>
+			<label class="field">
+				<span>Subject</span>
+				<input type="text" name="subject" required />
+			</label>
+			<label class="field">
+				<span>Message</span>
+				<textarea name="message" rows="6" required></textarea>
+			</label>
+
+			<button type="submit" class="btn-primary">Send</button>
+		</form>
+
+		<p class="text-sm text-gray-500 mt-8">
+			For privacy questions or DMCA notices, see the
+			<a href="/legal/grievance/">grievance officer</a> page (mandatory under IT Rules 2021).
+		</p>
+	</article>
+</BaseLayout>
+
+<style>
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-block: 2rem;
+		max-width: 32rem;
+	}
+	.field { display: flex; flex-direction: column; gap: 0.375rem; }
+	.field span { font-size: 0.875rem; color: #4b5563; font-weight: 500; }
+	.field input,
+	.field textarea {
+		padding: 0.625rem 0.875rem;
+		background: #f9fafb;
+		border: 1px solid #e5e7eb;
+		border-radius: 8px;
+		color: #111827;
+		font-family: inherit;
+		font-size: 1rem;
+	}
+	.field input:focus,
+	.field textarea:focus {
+		outline: none;
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+	}
+	.field textarea { resize: vertical; min-height: 120px; }
+	.hp { position: absolute; left: -9999px; opacity: 0; }
+	.contact-form .btn-primary {
+		align-self: flex-start;
+	}
+</style>
