@@ -9,7 +9,7 @@
  */
 export default function HeaderControls() {
   return (
-    <a className="hd-signin" href="/account/" aria-label="Sign in">
+    <a className="hd-signin" href="https://account.oriz.in/sign-in" aria-label="Sign in">
       sign in
       <style>{`
         .hd-signin {

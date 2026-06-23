@@ -1,5 +1,5 @@
 ---
-const target = `https://auth.oriz.in/finish-sign-in${Astro.url.search}`
+const target = `https://account.oriz.in/finish-sign-in${Astro.url.search}`
 ---
 <!doctype html>
 <html lang="en">
@@ -9,7 +9,7 @@ const target = `https://auth.oriz.in/finish-sign-in${Astro.url.search}`
 <title>Finishing sign-in…</title>
 </head>
 <body>
-<p>Finishing sign-in. Redirecting to <a href={target}>auth.oriz.in</a>…</p>
+<p>Finishing sign-in. Redirecting to <a href={target}>account.oriz.in</a>…</p>
 <script is:inline define:vars={{ target }}>window.location.replace(target)</script>
 </body>
 </html>
